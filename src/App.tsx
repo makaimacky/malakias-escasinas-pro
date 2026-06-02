@@ -19,6 +19,7 @@ import {
   X,
 } from 'lucide-react';
 import profilePhoto from './assets/profile-photo.png';
+import portfolioQr from './assets/portfolio-qr.png';
 import { certifications, education, experiences, profile, projects, skillGroups, stats, websiteSamples } from './profileData';
 
 const navItems = ['About', 'Skills', 'Experience', 'Projects', 'Websites', 'Contact'];
@@ -35,7 +36,11 @@ function App() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  const mailTo = `mailto:${profile.email}?subject=${encodeURIComponent('Portfolio Inquiry for Malakias Escasinas')}`;
+  const emailAddress = profile.email.trim();
+  const mailTo = `mailto:${emailAddress}?subject=${encodeURIComponent('Portfolio Inquiry for Malakias Escasinas')}`;
+  const openEmail = () => {
+    window.location.href = mailTo;
+  };
 
   const categories = useMemo(() => ['All', ...Array.from(new Set(projects.map((project) => project.category)))], []);
   const websiteCategories = useMemo(() => ['All', ...Array.from(new Set(websiteSamples.map((sample) => sample.category)))], []);
@@ -123,7 +128,7 @@ function App() {
             <p className="hero-intro">{profile.intro}</p>
 
             <div className="hero-actions">
-              <a className="primary-button" href={mailTo}><Mail size={18} /> Contact Me</a>
+              <button type="button" className="primary-button" onClick={openEmail}><Mail size={18} /> Contact Me</button>
               <button className="ghost-button" onClick={generateCvPdf}><Download size={18} /> Generate CV PDF</button>
               <a className="ghost-button" href={profile.portfolio} target="_blank" rel="noreferrer">View Portfolio <ArrowUpRight size={18} /></a>
               <button className="ghost-button" onClick={copyContact}><Copy size={18} /> {copied ? 'Copied!' : 'Copy Contact'}</button>
@@ -131,16 +136,16 @@ function App() {
           </div>
 
           <aside className="hero-card reveal delay-one">
-            <a className="profile-photo-link" href={mailTo} aria-label="Email Malakias Escasinas">
+            <button type="button" className="profile-photo-link" onClick={openEmail} aria-label="Email Malakias Escasinas">
               <img className="profile-photo" src={profilePhoto} alt="Portrait of Malakias Escasinas" />
-            </a>
+            </button>
             <div className="availability-block">
               <span className="availability-pill"><span className="availability-dot" /> Available for opportunities</span>
               <p>Web development, WordPress, dashboards, API/data workflows, SEO, and senior support.</p>
             </div>
             <div className="contact-grid">
-              <span><Phone size={16} /> {profile.phone}</span>
-              <span><Mail size={16} /> {profile.email}</span>
+              <a href={`tel:${profile.phone.replace(/\D/g, '')}`}><Phone size={16} /> {profile.phone}</a>
+              <button type="button" onClick={openEmail}><Mail size={16} /> {profile.email}</button>
               <span><MapPin size={16} /> {profile.location}</span>
             </div>
           </aside>
@@ -192,7 +197,24 @@ function App() {
         </section>
 
         <section className="section-pad contact-section" id="contact">
-          <div className="contact-card reveal"><p className="eyebrow">Contact</p><h2>Let’s discuss how my skills align with your organization’s needs.</h2><p>My strength is turning business requirements into practical digital solutions—websites, dashboards, data tools, SEO-ready pages, and support systems.</p><div className="link-grid"><a href={mailTo}><Mail size={18} /> Email Me <ExternalLink size={15} /></a><button className="link-button" onClick={generateCvPdf}><Download size={18} /> Generate CV PDF</button><a href={profile.linkedIn} target="_blank" rel="noreferrer"><BriefcaseBusiness size={18} /> LinkedIn <ExternalLink size={15} /></a><a href={profile.portfolio} target="_blank" rel="noreferrer"><ArrowUpRight size={18} /> Portfolio <ExternalLink size={15} /></a></div></div>
+          <div className="contact-card reveal">
+            <p className="eyebrow">Contact</p>
+            <h2>Let’s discuss how my skills align with your organization’s needs.</h2>
+            <p>My strength is turning business requirements into practical digital solutions—websites, dashboards, data tools, SEO-ready pages, and support systems.</p>
+            <div className="qr-contact-card">
+              <img src={portfolioQr} alt="QR code for Malakias Escasinas portfolio" />
+              <div>
+                <strong>Scan my portfolio</strong>
+                <span>{profile.portfolio}</span>
+              </div>
+            </div>
+            <div className="link-grid">
+              <button type="button" className="link-button" onClick={openEmail}><Mail size={18} /> Email Me</button>
+              <button type="button" className="link-button" onClick={generateCvPdf}><Download size={18} /> Generate CV PDF</button>
+              <a href={profile.linkedIn} target="_blank" rel="noreferrer"><BriefcaseBusiness size={18} /> LinkedIn <ExternalLink size={15} /></a>
+              <a href={profile.portfolio} target="_blank" rel="noreferrer"><ArrowUpRight size={18} /> Portfolio <ExternalLink size={15} /></a>
+            </div>
+          </div>
         </section>
       </main>
     </div>
